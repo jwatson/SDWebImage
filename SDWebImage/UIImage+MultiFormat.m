@@ -11,6 +11,10 @@
 #import "NSData+ImageContentType.h"
 #import <ImageIO/ImageIO.h>
 
+#ifdef SD_GIF
+#import <YLGIFImage/YLGIFImage.h>
+#endif
+
 #ifdef SD_WEBP
 #import "UIImage+WebP.h"
 #endif
@@ -18,14 +22,15 @@
 @implementation UIImage (MultiFormat)
 
 + (UIImage *)sd_imageWithData:(NSData *)data {
-    UIImage *image;
+    UIImage *image = nil;
     NSString *imageContentType = [NSData sd_contentTypeForImageData:data];
     if ([imageContentType isEqualToString:@"image/gif"]) {
+#ifdef SD_GIF
         image = [UIImage sd_animatedGIFWithData:data];
+#endif
     }
 #ifdef SD_WEBP
-    else if ([imageContentType isEqualToString:@"image/webp"])
-    {
+    else if ([imageContentType isEqualToString:@"image/webp"]) {
         image = [UIImage sd_imageWithWebPData:data];
     }
 #endif
@@ -38,7 +43,6 @@
                                   orientation:orientation];
         }
     }
-
 
     return image;
 }

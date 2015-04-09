@@ -18,12 +18,18 @@ Pod::Spec.new do |s|
 
   s.requires_arc = true
   s.framework = 'ImageIO'
-  
+
   s.default_subspec = 'Core'
 
   s.subspec 'Core' do |core|
     core.source_files = 'SDWebImage/{NS,SD,UI}*.{h,m}'
     core.exclude_files = 'SDWebImage/UIImage+WebP.{h,m}'
+  end
+
+  s.subspec 'GIF' do |gif|
+    gif.xcconfig = { 'GCC_PREPROCESSOR_DEFINITIONS' => '$(inherited) SD_GIF=1' }
+    gif.dependency 'SDWebImage/Core'
+    gif.dependency 'YLGIFImage'
   end
 
   s.subspec 'MapKit' do |mk|
